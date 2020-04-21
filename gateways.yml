@@ -1,0 +1,7 @@
+---
+- hosts: gateways
+  roles:
+    - common
+    - gateways
+    - docker
+    - ssh

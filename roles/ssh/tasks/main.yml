@@ -1,0 +1,32 @@
+---
+- name: Install SSH Server
+  package:
+    state: latest
+    name:
+      - openssh-server
+
+- name: Disable root ssh password login
+  lineinfile:
+    state: present
+    destfile: '/etc/ssh/sshd_config'
+    regexp: '^#?PermitRootLogin\s'
+    line: 'PermitRootLogin prohibit-password'
+  notify: restart sshd
+
+- name: Create user accounts and add users to groups
+  user:
+    name: "{{ item }}"
+    groups: "sudo"
+  with_items: "{{ users }}"
+
+- name: "[localhost] Clone SSH-Keys from Git"
+  local_action:
+    module: git
+    repo: "{{ ssh_key_repo }}"
+    dest: /tmp/ffmd-ssh-keys
+
+- name: Add authorized keys to all users
+  authorized_key:
+    user: "{{ item }}"
+    key: "{{ lookup('file', '/tmp/ffmd-ssh-keys/'+ item + '.pub') }}"
+  with_items: "{{ users }}"
