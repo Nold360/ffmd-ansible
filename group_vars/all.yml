@@ -1,2 +1,11 @@
 ---
+# ansible python
+ansible_python_interpreter: /usr/bin/python3
+
+# Repo with SSH-Keys of admins
 ssh_key_repo: https://github.com/FreifunkMD/ffmd-ssh-keys
+
+# NTP
+ntp_area: de
+ntp_manage_config: true
+ntp_timezone: 'Europe/Berlin'

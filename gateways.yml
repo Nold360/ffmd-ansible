@@ -2,6 +2,24 @@
 - hosts: gateways
   roles:
     - common
-    - gateways
-    - docker
-    - ssh
+#    - gateways
+#    - docker
+#    - ssh
+    - role: borgbackup
+      borg_encryption_passphrase:
+      borg_repository: "backup:{{ ansible_hostname }}"
+      borg_source_directories:
+        - /
+      borg_exclude_patterns:
+        - /var/lib/docker/image
+        - /mnt
+        - /media
+        - /tmp
+        - /var/tmp
+        - /var/cache
+      borg_retention_policy:
+        keep_hourly: 3
+        keep_daily: 7
+        keep_weekly: 4
+        keep_monthly: 6
+
